@@ -2,31 +2,30 @@
 using AbpIoLocalization.Admin.Localization;
 using AbpIoLocalization.Base.Localization;
 using AbpIoLocalization.Blog.Localization;
-using AbpIoLocalization.Commercial.Localization;
 using AbpIoLocalization.Docs.Localization;
 using AbpIoLocalization.Support.Localization;
 using AbpIoLocalization.Www;
 using Volo.Abp.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
-using Volo.Abp.Localization.Resources.AbpValidation;
 using Volo.Abp.Modularity;
+using Volo.Abp.Validation;
+using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
 
 namespace AbpIoLocalization
 {
-    [DependsOn(typeof(AbpLocalizationModule))]
+    [DependsOn(typeof(AbpValidationModule))]
     public class AbpIoLocalizationModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<VirtualFileSystemOptions>(options =>
+            Configure<AbpVirtualFileSystemOptions>(options =>
             {
                 options.FileSets.AddEmbedded<AbpIoLocalizationModule>("AbpIoLocalization");
             });
 
-            Configure<ExceptionLocalizationOptions>(options =>
+            Configure<AbpExceptionLocalizationOptions>(options =>
             {
-                options.MapCodeNamespace("Volo.AbpIo.Commercial", typeof(AbpIoCommercialResource));
                 options.MapCodeNamespace("Volo.AbpIo.Domain", typeof(AbpIoBaseResource));
             });
 
@@ -52,11 +51,6 @@ namespace AbpIoLocalization
                 options.Resources
                     .Add<AbpIoBlogResource>("en")
                     .AddVirtualJson("/Blog/Localization/Resources")
-                    .AddBaseTypes(typeof(AbpIoBaseResource));
-
-                options.Resources
-                    .Add<AbpIoCommercialResource>("en")
-                    .AddVirtualJson("/Commercial/Localization/Resources")
                     .AddBaseTypes(typeof(AbpIoBaseResource));
 
                 options.Resources

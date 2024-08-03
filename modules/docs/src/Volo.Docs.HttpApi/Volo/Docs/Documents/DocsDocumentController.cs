@@ -1,12 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Asp.Versioning;
 using Volo.Abp;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace Volo.Docs.Documents
 {
-    [RemoteService]
-    [Area("docs")]
+    [RemoteService(Name = DocsRemoteServiceConsts.RemoteServiceName)]
+    [Area(DocsRemoteServiceConsts.ModuleName)]
     [ControllerName("Document")]
     [Route("api/docs/documents")]
     public class DocsDocumentController :  AbpController, IDocumentAppService
@@ -34,7 +38,7 @@ namespace Volo.Docs.Documents
 
         [HttpGet]
         [Route("navigation")]
-        public virtual Task<DocumentWithDetailsDto> GetNavigationAsync(GetNavigationDocumentInput input)
+        public Task<NavigationNode> GetNavigationAsync(GetNavigationDocumentInput input)
         {
             return DocumentAppService.GetNavigationAsync(input);
         }
@@ -44,6 +48,34 @@ namespace Volo.Docs.Documents
         public Task<DocumentResourceDto> GetResourceAsync(GetDocumentResourceInput input)
         {
             return DocumentAppService.GetResourceAsync(input);
+        }
+
+        [HttpPost]
+        [Route("search")]
+        public Task<PagedResultDto<DocumentSearchOutput>> SearchAsync(DocumentSearchInput input)
+        {
+            return DocumentAppService.SearchAsync(input);
+        }
+
+        [HttpGet]
+        [Route("full-search-enabled")]
+        public Task<bool> FullSearchEnabledAsync()
+        {
+            return DocumentAppService.FullSearchEnabledAsync();
+        }
+
+        [HttpGet]
+        [Route("links")]
+        public Task<List<string>> GetUrlsAsync(string prefix)
+        {
+            return DocumentAppService.GetUrlsAsync(prefix);
+        }
+
+        [HttpGet]
+        [Route("parameters")]
+        public Task<DocumentParametersDto> GetParametersAsync(GetParametersDocumentInput input)
+        {
+            return DocumentAppService.GetParametersAsync(input);
         }
     }
 }
